@@ -8,6 +8,8 @@ app.use(express.json());
 // Routes
 app.use('/api/auth', require('./routes/auth.routes'));
 app.use('/api/fridge', require('./routes/fridge.routes'));
+app.use('/api/barcode', require('./routes/barcode.routes'));
+app.use('/api/notifications', require('./routes/notification.routes'));
 
 app.get('/api/health', (req, res) => {
   res.json({ success: true, message: 'Freedge API running' });
