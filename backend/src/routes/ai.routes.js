@@ -1,8 +1,8 @@
 const express = require('express');
 const router = express.Router();
-const { getBarcode } = require('../controllers/barcode.controller');
+const { chat } = require('../controllers/ai.controller');
 const { protect } = require('../middleware/auth.middleware');
 
-router.get('/:barcodeId', protect, getBarcode);
+router.post('/chat', protect, chat);
 
 module.exports = router;

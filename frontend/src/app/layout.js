@@ -1,5 +1,8 @@
 import { DM_Sans, DM_Serif_Display } from 'next/font/google';
 import './globals.css';
+import { Geist, Geist_Mono } from "next/font/google";
+import ChatButton from '@/components/chat/ChatButton';
+import "./globals.css";
 
 const dmSans = DM_Sans({
   variable: '--font-dm-sans',
@@ -25,6 +28,11 @@ export default function RootLayout({ children }) {
   return (
     <html lang="en" className={`${dmSans.variable} ${dmSerifDisplay.variable} h-full antialiased`}>
       <body className="min-h-full flex flex-col">{children}</body>
+    <html lang="en">
+      <body>
+        {children}
+        <ChatButton />
+      </body>
     </html>
   );
 }
