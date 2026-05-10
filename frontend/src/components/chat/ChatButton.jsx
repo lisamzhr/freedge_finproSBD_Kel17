@@ -7,7 +7,7 @@ export default function ChatButton() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
 
   useEffect(() => {
-    const token = localStorage.getItem('freedge_token');
+    const token = localStorage.getItem('token');
     setIsLoggedIn(!!token);
   }, []);
 
