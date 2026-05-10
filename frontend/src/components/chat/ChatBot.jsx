@@ -4,7 +4,7 @@ import ChatMessage from './ChatMessage';
 
 export default function ChatBot({ onClose }) {
   const [messages, setMessages] = useState([
-    { role: 'assistant', content: 'Halo! Saya Freya. Mau masak apa hari ini?' }
+    { role: 'assistant', content: 'Halo! Saya Freya, mau masak apa hari ini?' }
   ]);
   const [input, setInput] = useState('');
   const [loading, setLoading] = useState(false);
@@ -15,23 +15,23 @@ export default function ChatBot({ onClose }) {
   }, [messages]);
 
   const sendMessage = async () => {
-    if (!input.trim() || loading) return;
+        if (!input.trim() || loading) return;
 
-    const userMsg = { role: 'user', content: input };
-    setMessages(prev => [...prev, userMsg]);
-    setInput('');
-    setLoading(true);
+        const userMsg = { role: 'user', content: input };
+        setMessages(prev => [...prev, userMsg]);
+        setInput('');
+        setLoading(true);
 
-    try {
-      const token = localStorage.getItem('freedge_token');
-      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/ai/chat`, {
-  method: 'POST',
-  headers: {
-    'Content-Type': 'application/json',
-    Authorization: `Bearer ${token}`,
-  },
-  body: JSON.stringify({ message: input }),
-});
+        try {
+          const token = localStorage.getItem('token');
+          const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/ai/chat`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${token}`,
+      },
+      body: JSON.stringify({ message: input }),
+    });
 
 const data = await res.json();
 
@@ -52,7 +52,7 @@ setMessages(prev => [...prev, { role: 'assistant', content: reply }]);
   };
 
   return (
-    <div className="fixed bottom-24 right-6 z-50 w-80 rounded-2xl shadow-2xl flex flex-col overflow-hidden border border-gray-200" style={{ backgroundColor: '#FBF9F8', height: '520px' }}>
+    <div className="fixed bottom-24 right-6 z-50 w-[420px] rounded-2xl shadow-2xl flex flex-col overflow-hidden border border-gray-200" style={{ backgroundColor: '#FBF9F8', height: '520px' }}>
       
       {/* Header */}
       <div className="px-5 py-4 flex items-center justify-between" style={{ backgroundColor: '#2D6A4F' }}>
