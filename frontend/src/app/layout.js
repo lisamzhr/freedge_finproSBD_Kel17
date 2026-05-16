@@ -27,9 +27,11 @@ export const metadata = {
 
 export default function RootLayout({ children }) {
   return (
-    <html lang="en" className={`${dmSans.variable} ${dmSerifDisplay.variable} h-full antialiased`}>
+    <html
+      lang="en"
+      className={`${dmSans.variable} ${dmSerifDisplay.variable} h-full antialiased`}
+    >
       <body className="min-h-full flex flex-col">
-        <Sidebar user={{ name: "Alex Chen", plan: "PREMIUM" }} />
         {children}
         <ChatButton />
       </body>

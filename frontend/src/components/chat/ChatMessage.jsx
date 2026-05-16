@@ -1,3 +1,5 @@
+import ReactMarkdown from 'react-markdown';
+
 export default function ChatMessage({ role, content }) {
   const isUser = role === 'user';
 
@@ -7,13 +9,29 @@ export default function ChatMessage({ role, content }) {
         {isUser ? 'YOU' : 'ASSISTANT'}
       </span>
       <div
-        className="max-w-[85%] rounded-2xl px-4 py-3 text-sm leading-relaxed"
+        className="max-w-[90%] rounded-lg px-4 py-3 text-sm leading-relaxed break-words"
         style={{
-          backgroundColor: isUser ? '#F0F0F0' : '#2D6A4F',
+          backgroundColor: isUser ? 'transparent' : '#2D6A4F',
           color: isUser ? '#1A1A1A' : '#FFFFFF',
+          border: isUser ? '1.5px solid #2D6A4F' : 'none',
         }}
       >
-        {content}
+        {isUser ? content : (
+          <ReactMarkdown
+            components={{
+              p: ({ children }) => <p className="mb-2 last:mb-0">{children}</p>,
+              strong: ({ children }) => <strong className="font-semibold">{children}</strong>,
+              ul: ({ children }) => <ul className="list-disc list-inside mb-2 space-y-1">{children}</ul>,
+              ol: ({ children }) => <ol className="list-decimal list-inside mb-2 space-y-1">{children}</ol>,
+              li: ({ children }) => <li className="text-sm">{children}</li>,
+              h1: ({ children }) => <h1 className="font-bold text-base mb-1">{children}</h1>,
+              h2: ({ children }) => <h2 className="font-bold text-sm mb-1">{children}</h2>,
+              h3: ({ children }) => <h3 className="font-semibold text-sm mb-1">{children}</h3>,
+            }}
+          >
+            {content}
+          </ReactMarkdown>
+        )}
       </div>
     </div>
   );
