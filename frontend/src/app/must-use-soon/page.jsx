@@ -1,5 +1,6 @@
 "use client";
 
+import { useRequireAuth } from '@/hooks/useAuth';
 import React, { useState, useEffect, useMemo } from 'react';
 import { 
   Search, 
@@ -12,6 +13,7 @@ import {
 } from 'lucide-react';
 
 const MustUseSoonPage = () => {
+  useRequireAuth();
   const [items, setItems] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -24,7 +26,7 @@ const MustUseSoonPage = () => {
   // connect ke user yang logged-in
   const fetchUserProfile = async () => {
     try {
-      const token = localStorage.getItem('token');
+      const token = localStorage.getItem('token') || sessionStorage.getItem('token');
       if (!token) return;
       const response = await fetch('http://localhost:5000/api/auth/me', {
         method: 'GET',
@@ -43,7 +45,7 @@ const MustUseSoonPage = () => {
   const fetchInventory = async () => {
     try {
       setLoading(true);
-      const token = localStorage.getItem('token');
+      const token = localStorage.getItem('token') || sessionStorage.getItem('token');
       const response = await fetch('http://localhost:5000/api/fridge', {
         method: 'GET',
         headers: {
@@ -71,8 +73,16 @@ const MustUseSoonPage = () => {
   // searching date
   const resolveExpiryDate = (item) => {
     if (!item) return null;
+    
+    // kalau ada batches, ambil yang paling dekat expired (earliest)
+    if (item.batches && Array.isArray(item.batches) && item.batches.length > 0) {
+      const sorted = [...item.batches]
+        .filter(b => b.expireDate)
+        .sort((a, b) => new Date(a.expireDate) - new Date(b.expireDate));
+      if (sorted.length > 0) return sorted[0].expireDate;
+    }
+  
     if (item.expireDate) return item.expireDate;
-    if (item.batches?.[0]?.expireDate) return item.batches[0].expireDate;
     return item.productId?.expireDate || null;
   };
 

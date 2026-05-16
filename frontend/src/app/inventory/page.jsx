@@ -1,4 +1,5 @@
 "use client";
+import { useRequireAuth } from '@/hooks/useAuth';
 
 import React, { useState, useEffect, useMemo } from 'react';
 import { 
@@ -11,6 +12,7 @@ import {
 } from 'lucide-react';
 
 const InventoryPage = () => {
+  useRequireAuth();
   const [items, setItems] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -18,11 +20,13 @@ const InventoryPage = () => {
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedCategory, setSelectedCategory] = useState("All");
   const [sortOrder] = useState("Newest");
+  const [useModal, setUseModal] = useState(null); // { id, name, unit, total }
+  const [useQty, setUseQty] = useState('');
 
   // connect ke profile yang logged-in
   const fetchUserProfile = async () => {
     try {
-      const token = localStorage.getItem('token');
+      const token = localStorage.getItem('token') || sessionStorage.getItem('token');;
       if (!token) return;
 
       const response = await fetch('http://localhost:5000/api/auth/me', {
@@ -43,7 +47,7 @@ const InventoryPage = () => {
   const fetchInventory = async () => {
     try {
       setLoading(true);
-      const token = localStorage.getItem('token');
+      const token = localStorage.getItem('token') || sessionStorage.getItem('token');
       
       const response = await fetch('http://localhost:5000/api/fridge', {
         method: 'GET',
@@ -148,7 +152,7 @@ const InventoryPage = () => {
   };
 
   // kategori untuk produk
-  const categories = ["All", "Produce", "Protein", "Dairy", "Frozen", "Beverage", "Others"];
+  const categories = ["All", "Produce", "Protein", "Dairy", "Frozen", "Beverage", "Other"];
 
   return (
     <div className="min-h-screen bg-[#FBFBFB] font-sans text-gray-900">
@@ -259,12 +263,83 @@ const InventoryPage = () => {
                         </div>
                       </div>
                     </div>
+                    {/* delete button */}
+                    <button
+                      onClick={() => setUseModal({ id: item._id, name: item.displayName, unit: item.unit, total: item.totalQuantity })}
+                      className="mt-3 w-full py-1.5 text-[9px] font-black uppercase tracking-widest text-[#1B4332] border border-[#1B4332] hover:bg-[#1B4332] hover:text-white transition-all"
+                    >
+                      Use / Delete
+                    </button>
                   </div>
                 </div>
               );
             })}
           </div>
         )}
+        {useModal && (
+        <div style={{
+          position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.4)',
+          display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 100
+        }}>
+          <div style={{ background: '#fff', padding: '32px', width: '360px', borderRadius: '2px' }}>
+            <p style={{ fontSize: '11px', fontWeight: 700, letterSpacing: '0.1em', textTransform: 'uppercase', color: '#707973', marginBottom: '8px' }}>Use Item</p>
+            <h3 style={{ fontSize: '20px', fontWeight: 800, color: '#1B4332', marginBottom: '4px' }}>{useModal.name}</h3>
+            <p style={{ fontSize: '12px', color: '#707973', marginBottom: '20px' }}>Stock: {useModal.total} {useModal.unit}</p>
+
+            <input
+              type="number"
+              min="1"
+              max={useModal.total}
+              value={useQty}
+              onChange={e => setUseQty(e.target.value)}
+              placeholder={`Amount in ${useModal.unit}`}
+              style={{ width: '100%', height: '44px', border: '1px solid #BFC9C1', padding: '0 12px', fontSize: '14px', boxSizing: 'border-box', marginBottom: '12px', outline: 'none' }}
+            />
+
+            <div style={{ display: 'flex', gap: '8px' }}>
+              <button
+                onClick={async () => {
+                  if (!useQty || useQty <= 0) return;
+                  const token = localStorage.getItem('token') || sessionStorage.getItem('token');
+                  await fetch(`http://localhost:5000/api/fridge/${useModal.id}/use`, {
+                    method: 'PATCH',
+                    headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
+                    body: JSON.stringify({ usedQty: Number(useQty) })
+                  });
+                  setUseModal(null);
+                  setUseQty('');
+                  fetchInventory();
+                }}
+                style={{ flex: 1, height: '44px', background: '#1B4332', color: '#fff', border: 'none', fontSize: '11px', fontWeight: 700, letterSpacing: '0.1em', textTransform: 'uppercase', cursor: 'pointer' }}
+              >
+                Confirm
+              </button>
+              <button
+                onClick={() => { setUseModal(null); setUseQty(''); }}
+                style={{ flex: 1, height: '44px', background: '#fff', color: '#707973', border: '1px solid #BFC9C1', fontSize: '11px', fontWeight: 700, cursor: 'pointer' }}
+              >
+                Cancel
+              </button>
+            </div>
+              
+            <button
+              onClick={async () => {
+                if (!confirm('Delete this item?')) return;
+                const token = localStorage.getItem('token') || sessionStorage.getItem('token');
+                await fetch(`http://localhost:5000/api/fridge/${useModal.id}`, {
+                  method: 'DELETE',
+                  headers: { Authorization: `Bearer ${token}` }
+                });
+                setUseModal(null);
+                fetchInventory();
+              }}
+              style={{ width: '100%', marginTop: '8px', height: '36px', background: 'none', border: '1px solid #FECACA', color: '#EF4444', fontSize: '10px', fontWeight: 700, letterSpacing: '0.1em', textTransform: 'uppercase', cursor: 'pointer' }}
+            >
+              Delete Item
+            </button>
+          </div>
+        </div>
+      )}
       </main>
     </div>
   );

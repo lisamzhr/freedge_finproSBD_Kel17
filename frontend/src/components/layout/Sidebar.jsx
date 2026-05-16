@@ -31,21 +31,11 @@ const NAV_ITEMS = [
   },
   {
     label: "Must Use Soon",
-    href: "/alerts",
+    href: "/must-use-soon",
     icon: (
       <svg width="18" height="18" viewBox="0 0 18 18" fill="none">
         <circle cx="9" cy="9" r="7.5" stroke="currentColor" strokeWidth="1.5"/>
         <path d="M9 5v4l2.5 2.5" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
-      </svg>
-    ),
-  },
-  {
-    label: "Settings",
-    href: "/settings",
-    icon: (
-      <svg width="18" height="18" viewBox="0 0 18 18" fill="none">
-        <circle cx="9" cy="9" r="2.5" stroke="currentColor" strokeWidth="1.5"/>
-        <path d="M9 1v2M9 15v2M1 9h2M15 9h2M3.22 3.22l1.42 1.42M13.36 13.36l1.42 1.42M3.22 14.78l1.42-1.42M13.36 4.64l1.42-1.42" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"/>
       </svg>
     ),
   },
@@ -123,18 +113,17 @@ export default function Sidebar() {
 
         {/* ── BOTTOM ── */}
         <div className="sidebar__bottom">
-          <Link href="/inventory/add" className="sidebar__add-btn">
+          <Link href="/add" className="sidebar__add-btn">
             + ADD ITEM
           </Link>
 
-          {/* Klik user → ke /profile */}
+          {/* Klik user ke /profile */}
           <Link href="/profile" className="sidebar__user">
             <div className="sidebar__avatar">{initials}</div>
             <div className="sidebar__user-info">
               <span className="sidebar__user-name">
                 {user.name ? user.name.toUpperCase() : "USER"}
               </span>
-              <span className="sidebar__user-badge">{user.plan}</span>
             </div>
           </Link>
         </div>
