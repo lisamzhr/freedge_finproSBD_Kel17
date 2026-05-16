@@ -3,6 +3,7 @@ import './globals.css';
 import { Geist, Geist_Mono } from "next/font/google";
 import ChatButton from '@/components/chat/ChatButton';
 import "./globals.css";
+import Sidebar from "@/components/layout/Sidebar";
 
 const dmSans = DM_Sans({
   variable: '--font-dm-sans',
