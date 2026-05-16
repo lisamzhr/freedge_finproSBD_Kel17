@@ -29,7 +29,7 @@ const InventoryPage = () => {
       const token = localStorage.getItem('token') || sessionStorage.getItem('token');;
       if (!token) return;
 
-      const response = await fetch('http://localhost:5000/api/auth/me', {
+      const response = await fetch('${process.env.NEXT_PUBLIC_API_URL}/api/auth/me', {
         method: 'GET',
         headers: { 'Authorization': `Bearer ${token}` }
       });
@@ -49,7 +49,7 @@ const InventoryPage = () => {
       setLoading(true);
       const token = localStorage.getItem('token') || sessionStorage.getItem('token');
       
-      const response = await fetch('http://localhost:5000/api/fridge', {
+      const response = await fetch('${process.env.NEXT_PUBLIC_API_URL}/fridge', {
         method: 'GET',
         headers: {
           'Content-Type': 'application/json',
@@ -301,7 +301,7 @@ const InventoryPage = () => {
                 onClick={async () => {
                   if (!useQty || useQty <= 0) return;
                   const token = localStorage.getItem('token') || sessionStorage.getItem('token');
-                  await fetch(`http://localhost:5000/api/fridge/${useModal.id}/use`, {
+                  await fetch(`${process.env.NEXT_PUBLIC_API_URL}/fridge/${useModal.id}/use`, {
                     method: 'PATCH',
                     headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
                     body: JSON.stringify({ usedQty: Number(useQty) })
@@ -326,7 +326,7 @@ const InventoryPage = () => {
               onClick={async () => {
                 if (!confirm('Delete this item?')) return;
                 const token = localStorage.getItem('token') || sessionStorage.getItem('token');
-                await fetch(`http://localhost:5000/api/fridge/${useModal.id}`, {
+                await fetch(`${process.env.NEXT_PUBLIC_API_URL}/fridge/${useModal.id}`, {
                   method: 'DELETE',
                   headers: { Authorization: `Bearer ${token}` }
                 });
