@@ -29,7 +29,7 @@ const InventoryPage = () => {
       const token = localStorage.getItem('token') || sessionStorage.getItem('token');;
       if (!token) return;
 
-      const response = await fetch('${process.env.NEXT_PUBLIC_API_URL}/api/auth/me', {
+      const response = await fetch('${process.env.NEXT_PUBLIC_API_URL}/auth/me', {
         method: 'GET',
         headers: { 'Authorization': `Bearer ${token}` }
       });
@@ -326,7 +326,7 @@ const InventoryPage = () => {
               onClick={async () => {
                 if (!confirm('Delete this item?')) return;
                 const token = localStorage.getItem('token') || sessionStorage.getItem('token');
-                await fetch(`${process.env.NEXT_PUBLIC_API_URL}/fridge/${useModal.id}`, {
+                await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/fridge/${useModal.id}`, {
                   method: 'DELETE',
                   headers: { Authorization: `Bearer ${token}` }
                 });
