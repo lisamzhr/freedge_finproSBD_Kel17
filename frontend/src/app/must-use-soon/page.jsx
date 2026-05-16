@@ -28,7 +28,7 @@ const MustUseSoonPage = () => {
     try {
       const token = localStorage.getItem('token') || sessionStorage.getItem('token');
       if (!token) return;
-      const response = await fetch('http://localhost:5000/api/auth/me', {
+      const response = await fetch('${process.env.NEXT_PUBLIC_API_URL}/auth/me', {
         method: 'GET',
         headers: { 'Authorization': `Bearer ${token}` }
       });
@@ -46,7 +46,7 @@ const MustUseSoonPage = () => {
     try {
       setLoading(true);
       const token = localStorage.getItem('token') || sessionStorage.getItem('token');
-      const response = await fetch('http://localhost:5000/api/fridge', {
+      const response = await fetch('${process.env.NEXT_PUBLIC_API_URL}/fridge', {
         method: 'GET',
         headers: {
           'Content-Type': 'application/json',
