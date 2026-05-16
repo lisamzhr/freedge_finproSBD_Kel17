@@ -2,6 +2,7 @@
 
 import { useState, useRef, useEffect, useCallback } from 'react';
 import { useRouter } from 'next/navigation';
+import { useRequireAuth } from '@/hooks/useAuth';
 
 const CATEGORIES = ['produce', 'protein', 'dairy', 'frozen', 'beverage', 'other'];
 const UNITS = ['gram', 'ml', 'pcs'];
@@ -98,6 +99,7 @@ function DuplicateModal({ match, onRestock, onAddNew, onClose }) {
 // ─── main page ────────────────────────────────────────────────────────────────
 
 export default function AddItemPage() {
+  useRequireAuth();
   const router = useRouter();
 
   // tab
@@ -259,7 +261,7 @@ export default function AddItemPage() {
 
   async function checkDuplicate() {
     try {
-      const res  = await fetch(`${API}/api/fridge/check-duplicate`, {
+      const res  = await fetch(`${API}/fridge/check-duplicate`, {
         method:  'POST',
         headers: authHeaders(),
         body:    JSON.stringify({ name: form.displayName }),
@@ -302,14 +304,14 @@ export default function AddItemPage() {
         fiber:    nutrition.fiber,
       }}),
     };
-    const res  = await fetch(`${API}/api/fridge`, {
+    const res  = await fetch(`${API}/fridge`, {
       method:  'POST',
       headers: authHeaders(),
       body:    JSON.stringify(body),
     });
     const data = await res.json();
     if (!res.ok || data.success === false) throw new Error(data.message || 'Failed to save item.');
-    router.push('/fridge');
+    router.push('/inventory');
   }
 
   async function handleSubmit(e) {

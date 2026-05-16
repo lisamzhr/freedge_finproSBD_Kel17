@@ -2,9 +2,11 @@
 
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
+import { useRequireAuth } from '@/hooks/useAuth';
 import Link from 'next/link';
 
 export default function ProfilePage() {
+  useRequireAuth();
   const router = useRouter();
   const [user, setUser] = useState({ name: '', email: '' });
   const [form, setForm] = useState({ name: '' });
@@ -50,7 +52,7 @@ export default function ProfilePage() {
     try {
       const token =
         localStorage.getItem('token') || sessionStorage.getItem('token');
-      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/auth/profile`, {
+      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/auth/profile`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
@@ -79,7 +81,7 @@ export default function ProfilePage() {
     localStorage.removeItem('user');
     sessionStorage.removeItem('token');
     sessionStorage.removeItem('user');
-    window.location.href = '/login';
+    window.location.href = '/';
   }
 
   return (
@@ -403,31 +405,7 @@ export default function ProfilePage() {
 
             </section>
           </div>
-
-          {/* ── FOOTER DETAIL ── */}
-          <div className="pp-footer-detail">
-            <div className="pp-detail-sq" />
-            <div className="pp-detail-bar">
-              <p className="pp-detail-bar-label">Freedge System Status</p>
-              <p className="pp-detail-bar-text">Optimization Engine: Active</p>
-            </div>
-          </div>
-
         </main>
-
-        {/* ── FOOTER ── */}
-        <footer className="pp-footer">
-          <span className="pp-footer-brand">Freedge</span>
-          <div style={{ display:'flex', flexDirection:'column', alignItems:'flex-end', gap:'8px' }}>
-            <div className="pp-footer-links">
-              <a href="#" className="pp-footer-link">Privacy</a>
-              <a href="#" className="pp-footer-link">Terms</a>
-              <a href="#" className="pp-footer-link">Contact</a>
-            </div>
-            <span className="pp-footer-copy">© 2024 Freedge Culinary Systems. All rights reserved.</span>
-          </div>
-        </footer>
-
       </div>
     </>
   );
