@@ -22,7 +22,7 @@ export default function HomePage() {
         <div className="navbar__inner">
           <Link href="/" className="navbar__brand">
             <span className="navbar__logo-mark" />
-            <span className="navbar__brand-name">FreshTrack</span>
+            <span className="navbar__brand-name">Freedge</span>
           </Link>
 
           <div className="navbar__links">

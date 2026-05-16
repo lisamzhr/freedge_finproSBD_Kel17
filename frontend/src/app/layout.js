@@ -3,6 +3,7 @@ import './globals.css';
 import { Geist, Geist_Mono } from "next/font/google";
 import ChatButton from '@/components/chat/ChatButton';
 import "./globals.css";
+import Sidebar from "@/components/layout/Sidebar";
 
 const dmSans = DM_Sans({
   variable: '--font-dm-sans',
@@ -27,9 +28,8 @@ export const metadata = {
 export default function RootLayout({ children }) {
   return (
     <html lang="en" className={`${dmSans.variable} ${dmSerifDisplay.variable} h-full antialiased`}>
-      <body className="min-h-full flex flex-col">{children}</body>
-    <html lang="en">
-      <body>
+      <body className="min-h-full flex flex-col">
+        <Sidebar user={{ name: "Alex Chen", plan: "PREMIUM" }} />
         {children}
         <ChatButton />
       </body>
