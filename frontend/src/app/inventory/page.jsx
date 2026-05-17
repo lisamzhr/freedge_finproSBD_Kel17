@@ -9,6 +9,8 @@ import {
   ChevronDown, 
   Calendar
 } from 'lucide-react';
+import Link from 'next/link';
+
 
 const InventoryPage = () => {
   const [items, setItems] = useState([]);
@@ -149,7 +151,7 @@ const InventoryPage = () => {
 
   // kategori untuk produk
   const categories = ["All", "Produce", "Protein", "Dairy", "Frozen", "Beverage", "Others"];
-
+  
   return (
     <div className="min-h-screen bg-[#FBFBFB] font-sans text-gray-900">
       <header className="h-20 border-b bg-white flex items-center justify-between px-10 sticky top-0 z-50">
@@ -182,9 +184,11 @@ const InventoryPage = () => {
             <h2 className="text-5xl font-black text-[#1B4332] tracking-tighter uppercase leading-none">Inventory</h2>
             <p className="text-gray-400 text-sm font-medium tracking-wide uppercase text-[10px]">Available products in your kitchen.</p>
           </div>
-          <button className="bg-[#1B4332] text-white px-8 py-4 rounded-none font-bold text-[11px] uppercase tracking-[0.2em] flex items-center gap-3 hover:bg-[#2D6A4F] transition-all shadow-md">
-            <Plus className="w-4 h-4" /> Add Item
-          </button>
+          <Link href="/add">
+            <button className="bg-[#1B4332] text-white px-8 py-4 rounded-none font-bold text-[11px] uppercase tracking-[0.2em] flex items-center gap-3 hover:bg-[#2D6A4F] transition-all shadow-md">
+              <Plus className="w-4 h-4" /> Add Item
+            </button>
+          </Link>
         </div>
 
         {/* filter kategori produk */}
