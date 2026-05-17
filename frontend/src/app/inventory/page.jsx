@@ -29,7 +29,7 @@ const InventoryPage = () => {
       const token = localStorage.getItem('token') || sessionStorage.getItem('token');;
       if (!token) return;
 
-      const response = await fetch('${process.env.NEXT_PUBLIC_API_URL}/auth/me', {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/auth/me`, {
         method: 'GET',
         headers: { 'Authorization': `Bearer ${token}` }
       });
@@ -49,7 +49,7 @@ const InventoryPage = () => {
       setLoading(true);
       const token = localStorage.getItem('token') || sessionStorage.getItem('token');
       
-      const response = await fetch('${process.env.NEXT_PUBLIC_API_URL}/fridge', {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/fridge`, {
         method: 'GET',
         headers: {
           'Content-Type': 'application/json',

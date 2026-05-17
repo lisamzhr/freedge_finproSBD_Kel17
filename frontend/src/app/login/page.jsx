@@ -291,7 +291,6 @@ export default function LoginPage() {
               <div className="lp-field">
                 <div className="lp-field-row">
                   <label className="lp-label" htmlFor="lp-password">Password</label>
-                  <Link href="/forgot-password" className="lp-forgot">Forgot?</Link>
                 </div>
                 <div className={`lp-input-wrap${errors.password ? ' err' : ''}`}>
                   <input id="lp-password" name="password" type="password"
