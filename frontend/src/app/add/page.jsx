@@ -13,13 +13,13 @@ const getToken = () =>
     ? localStorage.getItem('token') || sessionStorage.getItem('token')
     : null);
 
-// ─── helpers ──────────────────────────────────────────────────────────────────
+// helpers
 
 function authHeaders() {
   return { 'Content-Type': 'application/json', Authorization: `Bearer ${getToken()}` };
 }
 
-// ─── sub-components ───────────────────────────────────────────────────────────
+// sub-components
 
 function NutritionAccordion({ nutrition }) {
   const [open, setOpen] = useState(false);
@@ -96,7 +96,7 @@ function DuplicateModal({ match, onRestock, onAddNew, onClose }) {
   );
 }
 
-// ─── main page ────────────────────────────────────────────────────────────────
+// main page
 
 export default function AddItemPage() {
   useRequireAuth();
@@ -135,7 +135,7 @@ export default function AddItemPage() {
   const [loading,      setLoading]      = useState(false);
   const [serverError,  setServerError]  = useState('');
 
-  // ── scanner lifecycle ────────────────────────────────────────────────────────
+  // scanner setup
 
   const stopCamera = useCallback(() => {
     if (streamRef.current) {
@@ -196,7 +196,7 @@ export default function AddItemPage() {
     }
   }, [stopCamera]);
 
-  // start camera when tab = barcode, stop when switching away
+  // start camera ketika tab barcode dipilih, stop jika pindah tab
   useEffect(() => {
     if (tab === 'barcode') {
       startCamera();
@@ -206,7 +206,7 @@ export default function AddItemPage() {
     return () => stopCamera();
   }, [tab]);
 
-  // ── barcode fetch ────────────────────────────────────────────────────────────
+  // barcode fetching
   async function fetchBarcodeData(code) {
     setFetchingBarcode(true);
     try {
@@ -240,7 +240,7 @@ export default function AddItemPage() {
     }
   }
 
-  // ── form handlers ────────────────────────────────────────────────────────────
+  // form handling
 
   function handleChange(e) {
     const { name, value } = e.target;
@@ -257,7 +257,7 @@ export default function AddItemPage() {
     return e;
   }
 
-  // ── duplicate check ──────────────────────────────────────────────────────────
+  // duplicate check sebelum submit: cari item di fridge dengan nama mirip, return data jika match > threshold
 
   async function checkDuplicate() {
     try {
@@ -274,7 +274,7 @@ export default function AddItemPage() {
     }
   }
 
-  // ── restock existing item ────────────────────────────────────────────────────
+  // restock item yang sudah ada, tanpa duplicate check lagi
 
   async function restockExisting(itemId) {
     setLoading(true);
@@ -286,7 +286,7 @@ export default function AddItemPage() {
     }
   }
 
-  // ── submit ───────────────────────────────────────────────────────────────────
+  // submit baru atau restock
 
   async function submitToAPI() {
     const body = {
@@ -320,7 +320,7 @@ export default function AddItemPage() {
     const errs = validate();
     if (Object.keys(errs).length) { setErrors(errs); return; }
 
-    // duplicate check unless user already chose "add new"
+    // duplicate check
     if (!skipDupCheck) {
       const dup = await checkDuplicate();
       if (dup) { setDupMatch(dup); return; }
@@ -336,7 +336,7 @@ export default function AddItemPage() {
     }
   }
 
-  // ── render ───────────────────────────────────────────────────────────────────
+  // render
 
   return (
     <>
@@ -399,7 +399,7 @@ export default function AddItemPage() {
         }
         .ai-tab:hover:not(.active) { color: #404943; }
 
-        /* ── scanner ─────────────────────────────────────────────────── */
+        // barcode scanner
         .ai-scanner-wrap {
           position: relative;
           width: 100%;
@@ -532,7 +532,7 @@ export default function AddItemPage() {
           margin-bottom: 24px;
         }
 
-        /* ── section label ───────────────────────────────────────────── */
+        // form
         .ai-section-label {
           font-size: 9px;
           font-weight: 700;
@@ -544,7 +544,7 @@ export default function AddItemPage() {
           border-bottom: 1px solid #E3E0DC;
         }
 
-        /* ── form fields ─────────────────────────────────────────────── */
+        // form fields
         .ai-field { display: flex; flex-direction: column; gap: 6px; margin-bottom: 20px; }
         .ai-label {
           font-size: 10px;
@@ -635,7 +635,7 @@ export default function AddItemPage() {
           pointer-events: none;
         }
 
-        /* ── accordion ───────────────────────────────────────────────── */
+        // accordion
         .ai-accordion {
           border: 1px solid #E3E0DC;
           margin-top: 4px;
@@ -691,7 +691,7 @@ export default function AddItemPage() {
           margin: 4px 0 0;
         }
 
-        /* ── server error ────────────────────────────────────────────── */
+        // server error
         .ai-server-err {
           padding: 12px 16px;
           background: #FEF2F2;
@@ -701,7 +701,7 @@ export default function AddItemPage() {
           margin-bottom: 20px;
         }
 
-        /* ── submit btn ──────────────────────────────────────────────── */
+        // submit button
         .ai-submit {
           width: 100%;
           height: 56px;
@@ -733,7 +733,7 @@ export default function AddItemPage() {
         }
         @keyframes ai-spin { to { transform: rotate(360deg); } }
 
-        /* ── modal ───────────────────────────────────────────────────── */
+        // duplicate modal
         .ai-modal-overlay {
           position: fixed;
           inset: 0;
@@ -814,7 +814,7 @@ export default function AddItemPage() {
         }
         .ai-modal-btn-ghost:hover { color: #404943; }
 
-        /* ── responsive ──────────────────────────────────────────────── */
+        // responsive
         @media (max-width: 860px) {
           .ai-main { margin-left: 0; padding: 24px 20px; }
         }
@@ -844,7 +844,7 @@ export default function AddItemPage() {
               </button>
             </div>
 
-            {/* ── barcode tab ── */}
+            {/* barcode tab */}
             {tab === 'barcode' && (
               <>
                 {scanError ? (
@@ -935,7 +935,7 @@ export default function AddItemPage() {
               </>
             )}
 
-            {/* ── manual / form tab ── */}
+            {/* manual form*/}
             {tab === 'manual' && (
               <form onSubmit={handleSubmit} noValidate>
                 {serverError && <div className="ai-server-err">{serverError}</div>}
@@ -1017,7 +1017,7 @@ export default function AddItemPage() {
                   {errors.expireDate && <span className="ai-err-msg">{errors.expireDate}</span>}
                 </div>
 
-                {/* nutrition accordion — only show if barcode was scanned */}
+                {/* nutrition, show kalau barcode berhasil di-scan */}
                 <NutritionAccordion nutrition={nutrition} />
 
                 <button type="submit" className="ai-submit" disabled={loading}>
