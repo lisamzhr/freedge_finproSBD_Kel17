@@ -50,3 +50,25 @@ exports.login = async (req, res) => {
 exports.getMe = async (req, res) => {
   res.json({ success: true, data: { user: req.user } });
 };
+
+exports.updateProfile = async (req, res) => {
+  try {
+    const { name } = req.body;
+    if (!name || !name.trim()) {
+      return res.status(400).json({ success: false, message: 'Name is required.' });
+    }
+
+    const user = await User.findByIdAndUpdate(
+      req.user._id,
+      { name: name.trim() },
+      { new: true }
+    );
+
+    res.json({
+      success: true,
+      data: { user: { _id: user._id, name: user.name, email: user.email } }
+    });
+  } catch (err) {
+    res.status(500).json({ success: false, message: err.message });
+  }
+};
