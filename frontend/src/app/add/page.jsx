@@ -13,13 +13,13 @@ const getToken = () =>
     ? localStorage.getItem('token') || sessionStorage.getItem('token')
     : null);
 
-// helpers
+/* helpers */
 
 function authHeaders() {
   return { 'Content-Type': 'application/json', Authorization: `Bearer ${getToken()}` };
 }
 
-// sub-components
+/* sub-components */
 
 function NutritionAccordion({ nutrition }) {
   const [open, setOpen] = useState(false);
@@ -96,16 +96,15 @@ function DuplicateModal({ match, onRestock, onAddNew, onClose }) {
   );
 }
 
-// main page
-
+/* main page - add item */
 export default function AddItemPage() {
   useRequireAuth();
   const router = useRouter();
 
-  // tab
+  /* tab */
   const [tab, setTab] = useState('barcode'); // 'barcode' | 'manual'
 
-  // barcode scanner
+  /* barcode scanner camera */
   const videoRef    = useRef(null);
   const readerRef   = useRef(null);
   const streamRef   = useRef(null);
@@ -115,7 +114,7 @@ export default function AddItemPage() {
   const [scannedCode,  setScannedCode]  = useState('');
   const [fetchingBarcode, setFetchingBarcode] = useState(false);
 
-  // form
+  /* form */
   const [form, setForm] = useState({
     displayName: '',
     category:    'produce',
@@ -127,16 +126,15 @@ export default function AddItemPage() {
   const [nutrition, setNutrition] = useState(null);
   const [barcodeId, setBarcodeId] = useState('');
 
-  // duplicate modal
+  /* duplicate */
   const [dupMatch,    setDupMatch]    = useState(null);
   const [skipDupCheck, setSkipDupCheck] = useState(false);
 
-  // submit
+  /* submit */
   const [loading,      setLoading]      = useState(false);
   const [serverError,  setServerError]  = useState('');
 
-  // scanner setup
-
+  /* scanner camera setup */
   const stopCamera = useCallback(() => {
     if (streamRef.current) {
       streamRef.current.getTracks().forEach(t => t.stop());
@@ -177,7 +175,7 @@ export default function AddItemPage() {
 
       setScannerReady(true);
 
-      reader.decodeFromVideoElement(videoRef.current, (result, err) => {
+      reader.decodeFromVideoElement(videoRef.current, (result) => {
         if (result) {
           const code = result.getText();
           setScannedCode(code);
@@ -196,7 +194,7 @@ export default function AddItemPage() {
     }
   }, [stopCamera]);
 
-  // start camera ketika tab barcode dipilih, stop jika pindah tab
+  /* start camera ketika tab barcode dipilih, stop jika pindah tab */
   useEffect(() => {
     if (tab === 'barcode') {
       startCamera();
@@ -206,7 +204,7 @@ export default function AddItemPage() {
     return () => stopCamera();
   }, [tab]);
 
-  // barcode fetching
+  /* barcode fetching */
   async function fetchBarcodeData(code) {
     setFetchingBarcode(true);
     try {
@@ -233,15 +231,14 @@ export default function AddItemPage() {
         setBarcodeId(code);
       }
     } catch (_) {
-      // gagal fetch, user isi manual
+      /* failed fetch, user isi manual */
     } finally {
       setFetchingBarcode(false);
       setTab('manual');
     }
   }
 
-  // form handling
-
+  /* form handling */
   function handleChange(e) {
     const { name, value } = e.target;
     setForm(prev => ({ ...prev, [name]: value }));
@@ -257,8 +254,7 @@ export default function AddItemPage() {
     return e;
   }
 
-  // duplicate check sebelum submit: cari item di fridge dengan nama mirip, return data jika match > threshold
-
+  /* duplicate check sebelum submit: cari item di fridge dengan nama mirip, return data jika match > threshold */
   async function checkDuplicate() {
     try {
       const res  = await fetch(`${API}/fridge/check-duplicate`, {
@@ -274,8 +270,7 @@ export default function AddItemPage() {
     }
   }
 
-  // restock item yang sudah ada, tanpa duplicate check lagi
-
+  /* restock item yang sudah ada, tanpa duplicate check lagi */
   async function restockExisting(itemId) {
     setLoading(true);
     setServerError('');
@@ -286,8 +281,7 @@ export default function AddItemPage() {
     }
   }
 
-  // submit baru atau restock
-
+  /* submit baru atau restock */
   async function submitToAPI() {
     const body = {
       displayName: form.displayName.trim(),
@@ -320,7 +314,7 @@ export default function AddItemPage() {
     const errs = validate();
     if (Object.keys(errs).length) { setErrors(errs); return; }
 
-    // duplicate check
+    /* duplicate check */
     if (!skipDupCheck) {
       const dup = await checkDuplicate();
       if (dup) { setDupMatch(dup); return; }
@@ -336,8 +330,7 @@ export default function AddItemPage() {
     }
   }
 
-  // render
-
+  /* render */
   return (
     <>
       <style>{`
@@ -399,7 +392,7 @@ export default function AddItemPage() {
         }
         .ai-tab:hover:not(.active) { color: #404943; }
 
-        // barcode scanner
+        /* barcode scanner */
         .ai-scanner-wrap {
           position: relative;
           width: 100%;
@@ -512,6 +505,7 @@ export default function AddItemPage() {
           font-family: var(--font-dm-sans), sans-serif;
           font-size: 11px;
           font-weight: 700;
+          display: inline-block;
           letter-spacing: .1em;
           text-transform: uppercase;
           border: none;
@@ -532,7 +526,7 @@ export default function AddItemPage() {
           margin-bottom: 24px;
         }
 
-        // form
+        /* form */
         .ai-section-label {
           font-size: 9px;
           font-weight: 700;
@@ -544,7 +538,7 @@ export default function AddItemPage() {
           border-bottom: 1px solid #E3E0DC;
         }
 
-        // form fields
+        /* form fields */
         .ai-field { display: flex; flex-direction: column; gap: 6px; margin-bottom: 20px; }
         .ai-label {
           font-size: 10px;
@@ -635,7 +629,7 @@ export default function AddItemPage() {
           pointer-events: none;
         }
 
-        // accordion
+        /* accordion */
         .ai-accordion {
           border: 1px solid #E3E0DC;
           margin-top: 4px;
@@ -691,7 +685,7 @@ export default function AddItemPage() {
           margin: 4px 0 0;
         }
 
-        // server error
+        /* server error */
         .ai-server-err {
           padding: 12px 16px;
           background: #FEF2F2;
@@ -701,7 +695,7 @@ export default function AddItemPage() {
           margin-bottom: 20px;
         }
 
-        // submit button
+        /* submit button */
         .ai-submit {
           width: 100%;
           height: 56px;
@@ -733,7 +727,7 @@ export default function AddItemPage() {
         }
         @keyframes ai-spin { to { transform: rotate(360deg); } }
 
-        // duplicate modal
+        /* duplicate modal */
         .ai-modal-overlay {
           position: fixed;
           inset: 0;
@@ -814,7 +808,7 @@ export default function AddItemPage() {
         }
         .ai-modal-btn-ghost:hover { color: #404943; }
 
-        // responsive
+        /* responsive */
         @media (max-width: 860px) {
           .ai-main { margin-left: 0; padding: 24px 20px; }
         }
@@ -940,8 +934,6 @@ export default function AddItemPage() {
               <form onSubmit={handleSubmit} noValidate>
                 {serverError && <div className="ai-server-err">{serverError}</div>}
 
-                <p className="ai-section-label">Metadata</p>
-
                 {/* product name */}
                 <div className="ai-field">
                   <label className="ai-label" htmlFor="ai-name">Product Title</label>
@@ -1044,7 +1036,7 @@ export default function AddItemPage() {
           onAddNew={() => {
             setDupMatch(null);
             setSkipDupCheck(true);
-            // re-trigger submit
+            /* re-trigger submit */
             document.querySelector('form').requestSubmit();
           }}
           onClose={() => setDupMatch(null)}
