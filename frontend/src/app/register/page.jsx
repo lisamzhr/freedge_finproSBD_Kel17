@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import Link from 'next/link';
 
 export default function RegisterPage() {
@@ -8,6 +8,11 @@ export default function RegisterPage() {
   const [errors, setErrors] = useState({});
   const [loading, setLoading] = useState(false);
   const [serverError, setServerError] = useState('');
+
+  useEffect(() => {
+    const token = localStorage.getItem('token') || sessionStorage.getItem('token');
+    if (token) window.location.href = '/dashboard';
+  }, []);
 
   function validate() {
     const e = {};
@@ -33,7 +38,7 @@ export default function RegisterPage() {
 
     setLoading(true);
     try {
-      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/auth/register`, {
+      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/auth/register`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ name: form.name, email: form.email, password: form.password }),
@@ -41,6 +46,7 @@ export default function RegisterPage() {
       const data = await res.json();
       if (!data.success) throw new Error(data.message || 'Registration failed.');
       localStorage.setItem('token', data.data.token);
+      localStorage.setItem('user', JSON.stringify(data.data.user)); // ← tambah ini
       window.location.href = '/dashboard';
     } catch (err) {
       setServerError(err.message);
@@ -258,11 +264,6 @@ export default function RegisterPage() {
                 Already have an account?{' '}
                 <Link href="/login">Sign in</Link>
               </p>
-              <nav className="rp-links">
-                <Link href="/privacy">Privacy</Link>
-                <Link href="/terms">Terms</Link>
-                <Link href="/contact">Contact Us</Link>
-              </nav>
             </div>
           </div>
         </div>

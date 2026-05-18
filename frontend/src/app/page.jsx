@@ -1,28 +1,29 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import { useRouter } from 'next/navigation';
 import Link from "next/link";
 import Image from "next/image";
 import "./homepage.css";
 
 export default function HomePage() {
+  const router = useRouter();
   const [scrolled, setScrolled] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
 
   useEffect(() => {
-    const handleScroll = () => setScrolled(window.scrollY > 20);
-    window.addEventListener("scroll", handleScroll);
-    return () => window.removeEventListener("scroll", handleScroll);
+    const token = localStorage.getItem('token') || sessionStorage.getItem('token');
+    if (token) router.replace('/dashboard');
   }, []);
-
+  
   return (
     <div className="page-wrapper">
-      {/* ─── NAVBAR ─────────────────────────────────────────── */}
+      {/* NAVBAR */}
       <nav className={`navbar ${scrolled ? "navbar--scrolled" : ""}`}>
         <div className="navbar__inner">
           <Link href="/" className="navbar__brand">
             <span className="navbar__logo-mark" />
-            <span className="navbar__brand-name">FreshTrack</span>
+            <span className="navbar__brand-name">Freedge</span>
           </Link>
 
           <div className="navbar__links">
@@ -56,7 +57,7 @@ export default function HomePage() {
         )}
       </nav>
 
-      {/* ─── HERO ────────────────────────────────────────────── */}
+      {/* HERO */}
       <section className="hero">
         <div className="hero__content">
           <div className="hero__left">
@@ -87,7 +88,7 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* ─── FEATURES ────────────────────────────────────────── */}
+      {/* FEATURES */}
       <section id="features" className="features">
         <div className="features__container">
           <div className="features__header">
@@ -170,7 +171,7 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* ─── BENTO / EFFICIENCY ──────────────────────────────── */}
+      {/* BENTO / EFFICIENCY */}
       <section id="efficiency" className="bento">
         <div className="bento__container">
           <div className="bento__main">
@@ -224,7 +225,7 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* ─── FINAL CTA ───────────────────────────────────────── */}
+      {/* FINAL CTA */}
       <section className="cta-final">
         <h2 className="cta-final__heading">Ready to get started?</h2>
         <p className="cta-final__sub">

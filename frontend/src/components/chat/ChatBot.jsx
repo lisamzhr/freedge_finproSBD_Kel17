@@ -23,8 +23,8 @@ export default function ChatBot({ onClose }) {
         setLoading(true);
 
         try {
-          const token = localStorage.getItem('token');
-          const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/ai/chat`, {
+          const token = localStorage.getItem('token') || sessionStorage.getItem('token');
+          const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/ai/chat`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',

@@ -15,7 +15,7 @@ ini adalah isi kulkas pengguna saat ini:
 ${itemList || 'Kulkas kosong.'}
 
 tugasmu:
-- rekomendasikan resep berdasarkan bahan yang ada
+- rekomendasikan resep berdasarkan bahan yang ada, TAPI RESEP HARUS REALISTIS dengan selera manusia, jangan memaksakan pake semua bahan yang ada 
 - ingatkan bahan yang hampir expired
 - sarankan bahan tambahan jika diperlukan
 - jawab pertanyaan seputar memasak dan bahan makanan

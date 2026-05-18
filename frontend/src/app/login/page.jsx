@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import Link from 'next/link';
 
 export default function LoginPage() {
@@ -9,6 +9,11 @@ export default function LoginPage() {
   const [errors, setErrors] = useState({});
   const [loading, setLoading] = useState(false);
   const [serverError, setServerError] = useState('');
+
+  useEffect(() => {
+    const token = localStorage.getItem('token') || sessionStorage.getItem('token');
+    if (token) window.location.href = '/dashboard';
+  }, []);
 
   function validate() {
     const e = {};
@@ -32,7 +37,7 @@ export default function LoginPage() {
 
     setLoading(true);
     try {
-      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/auth/login`, {
+      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/auth/login`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ email: form.email, password: form.password }),
@@ -286,7 +291,6 @@ export default function LoginPage() {
               <div className="lp-field">
                 <div className="lp-field-row">
                   <label className="lp-label" htmlFor="lp-password">Password</label>
-                  <Link href="/forgot-password" className="lp-forgot">Forgot?</Link>
                 </div>
                 <div className={`lp-input-wrap${errors.password ? ' err' : ''}`}>
                   <input id="lp-password" name="password" type="password"

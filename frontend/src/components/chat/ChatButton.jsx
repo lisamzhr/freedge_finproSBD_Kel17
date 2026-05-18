@@ -7,10 +7,17 @@ export default function ChatButton() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
 
   useEffect(() => {
-    const token = localStorage.getItem('token');
-    setIsLoggedIn(!!token);
+    const checkToken = () => {
+      const token = localStorage.getItem('token') || sessionStorage.getItem('token');
+      console.log('token:', token);
+      console.log('isLoggedIn:', !!token);
+      setIsLoggedIn(!!token);
+    };
+    checkToken();
+    window.addEventListener('focus', checkToken);
+    return () => window.removeEventListener('focus', checkToken);
   }, []);
-
+  
   if (!isLoggedIn) return null;
 
   return (
